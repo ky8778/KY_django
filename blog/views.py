@@ -1,6 +1,8 @@
-from django.shortcuts import render
-from django.views.generic import ListView
 from .models import Post
+# [FBV]
+from django.shortcuts import render
+# [CBV]
+from django.views.generic import ListView, DetailView
 
 # Create your views here.
 # CBV
@@ -9,6 +11,10 @@ class PostList(ListView):
     # 방법1
     template_name = 'blog/index.html'
     ordering = '-pk'
+
+class PostDetail(DetailView):
+    model = Post
+    template_name = 'blog/single_post_page.html'
 
 ''' FBV
 def index(request):
@@ -20,7 +26,6 @@ def index(request):
     }
 
     return render(request, 'blog/index.html', my_posts)   # index.html 파일 렌더링
-'''
 
 def single_post_page(request, pk):
     post = Post.objects.get(pk=pk)
@@ -29,3 +34,4 @@ def single_post_page(request, pk):
     }
 
     return render(request, 'blog/single_post_page.html', my_post)
+'''
