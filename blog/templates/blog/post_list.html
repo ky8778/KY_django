@@ -1,10 +1,13 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="ko">
   <head>
     <title>Blog</title>
     <!-- bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
     <script src="https://kit.fontawesome.com/d3988f2315.js" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="{% static 'blog/currentTime.js' %}"></script>
+    <script type="text/javascript" src="{% static 'blog/sum.js' %}"></script>
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-danger">
@@ -45,6 +48,23 @@
       </div>
     </nav>
 
+    <!-- Test -->
+    <button onclick="currentTime()">현재시간</button>
+    <hr/>
+    <h1>Start Page</h1>
+    <h2>제목2</h2>
+    <h3>제목3</h3>
+    <p>문단 Paragraph</p>
+    <a href="https://www.google.com">Google</a>
+    <hr/>
+    <!-- <img src="./images/img1.jpeg" width="600px"> -->
+    <hr/>
+    <label for="inputA">a</label>
+    <input id="inputA" value=1 onkeyup="doSum()">
+    <label for="inputB">b</label>
+    <input id="inputB" value=2 onkeyup="doSum()">
+    <p><span id="valueA">1</span> + <span id="valueB">2</span> = <span id="valueC">3</span>입니다.</p>
+
     <!-- Modal -->
     <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
       <div class="modal-dialog">
@@ -73,40 +93,31 @@
       </div>
     </div>
 
+    
     <div class="container my-3">
       <div class="row">
         <div class="col-md-8 col-lg-9">
-          <h1>Blog</h1>
-          <!-- Blog Post -->
-          <div class="card mb-4">
-            <img class="card-img-top" src="http://placehold.it/750x300" alt="Card image cap">
-            <div class="card-body">
-              <h2 class="card-title">Post Title</h2>
-              <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis aliquid atque, nulla? Quos cum ex quis soluta, a laboriosam. Dicta expedita corporis animi vero voluptate voluptatibus possimus, veniam magni quis!</p>
-              <a href="#" class="btn btn-primary">Read More &rarr;</a>
+          <!-- Blog Posts -->
+          <!-- [CBV] 방법 -->
+          {% for p in post_list %}
+            <hr/>
+            <div class="card mb-4">
+              <!-- <img class="card-img-top" src="http://placehold.it/750x300" alt="Card image cap"> -->
+              <div class="card-body">
+                <h2 class="card-title">{{ p.title }}</h2>
+                <p class="card-text">{{ p.content }}</p>
+                <a href="{{ p.get_absolute_url }}" class="btn btn-primary">Read More &rarr;</a>
+              </div>
+              <div class="card-footer text-muted">
+                <h4> Posted on {{ p.created_at }} by</h4>
+                <a href="#">author (not developed)</a>
+              </div>
             </div>
-            <div class="card-footer text-muted">
-              Posted on January 1, 2020 by
-              <a href="#">Start Bootstrap</a>
-            </div>
-          </div>
-          <!-- Blog Post -->
-          <div class="card mb-4">
-            <img class="card-img-top" src="http://placehold.it/750x300" alt="Card image cap">
-            <div class="card-body">
-              <h2 class="card-title">Post Title</h2>
-              <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis aliquid atque, nulla? Quos cum ex quis soluta, a laboriosam. Dicta expedita corporis animi vero voluptate voluptatibus possimus, veniam magni quis!</p>
-              <a href="#" class="btn btn-primary">Read More &rarr;</a>
-            </div>
-            <div class="card-footer text-muted">
-              Posted on January 1, 2020 by
-              <a href="#">Start Bootstrap</a>
-            </div>
-          </div>
-          <!-- Pagination -->
-          <ul class="pagination justify-content-center mb-4">
-            <li class="page-item">
-              <a class="page-link" href="#">&larr; Older</a>
+            {% endfor %}
+            <!-- Pagination -->
+            <ul class="pagination justify-content-center mb-4">
+              <li class="page-item">
+                <a class="page-link" href="#">&larr; Older</a>
             </li>
             <li class="page-item disabled">
               <a class="page-link" href="#">Newer &rarr;</a>

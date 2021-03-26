@@ -9,7 +9,8 @@ from django.views.generic import ListView, DetailView
 class PostList(ListView):
     model = Post
     # 방법1
-    template_name = 'blog/index.html'
+    # template_name = 'blog/index.html'
+    # 방법2는 html 파일을 _list로 (대소문자는 구분 안하는 것 같네)
     ordering = '-pk'
 
 class PostDetail(DetailView):
