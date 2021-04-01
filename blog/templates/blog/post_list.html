@@ -23,7 +23,7 @@
         </div>
         <div class="card-footer text-muted">
           <h4> Posted on {{ p.created_at }} by</h4>
-          <a href="#">author (not developed)</a>
+          <a href="#">{{ p.author | upper }}</a>
         </div>
       </div>
     {% endfor %}
