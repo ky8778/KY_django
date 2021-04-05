@@ -1,7 +1,7 @@
 {% extends 'blog/base.html' %}
 
 {% block main_area %}
-  <h1>Blog {% if category %}<span class="badge badge-secondary">{{ category }}</span>{% endif %}</h1>
+  <h1>Blog {% if category %}<span class="badge bg-secondary">{{ category }}</span>{% endif %}</h1>
   {% if post_list.exists %}
     <!-- Blog Posts -->
     <!-- [CBV] 방법 -->
@@ -15,9 +15,9 @@
         {% endif %}
         <div class="card-body">
           {% if p.category %}
-            <span class="badge badge-secondary float-right">{{ p.category }}</span>
+            <span class="badge bg-secondary float-right">{{ p.category }}</span>
           {% else %}
-            <span class="badge badge-secondary float-right">미분류</span>
+            <span class="badge bg-secondary float-right">미분류</span>
           {% endif %}
             <h2 class="card-title">{{ p.title }}</h2>
           {% if p.hook_text %}
@@ -27,7 +27,7 @@
           {% if p.tags.exists %}
             <i class="fas fa-tags"></i>
             {% for tag in p.tags.iterator %}
-              <a href="{{ tag.get_absolute_url }}"><span class="badge badge-pill badge-light">{{ tag }}</span></a>
+              <a href="{{ tag.get_absolute_url }}"><span class="badge rounded-pill bg-success">{{ tag }}</span></a>
             {% endfor %}
             <br/>
             <br/>
