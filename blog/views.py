@@ -29,6 +29,18 @@ class PostDetail(DetailView):
         context['no_category_post_count'] = Post.objects.filter(category=None).count()
         return context
 
+# FBV
+def category_page(request, slug):
+    category = Category.objects.get(slug=slug)
+    context = {
+        'post_list': Post.objects.filter(category=category),
+        'categories': Category.objects.all(),
+        'no_category_post_cout': Post.objects.filter(category=None).count(),
+        'category': category,
+    }
+
+    return render(request, 'blog/post_list.html', context)
+
 ''' FBV
 def index(request):
     # posts = Post.objects.all()      # Query로 데이터를 가져오는 방법
