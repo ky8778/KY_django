@@ -4,16 +4,18 @@
   <h1>
     Blog
   </h1>
-  {% if category %}
+  <h3>
+    {% if category %}
     <span class="badge bg-secondary">
       {{ category }}
     </span>
-  {% endif %}
-  {% if tag %}
+    {% endif %}
+    {% if tag %}
     <span class="badge rounded-pill bg-success">
       <i class="fas fa-tags"></i> {{ tag }}
     </span>
-  {% endif %}
+    {% endif %}
+  </h3>
   {% if post_list.exists %}
     <!-- Blog Posts -->
     <!-- [CBV] 방법 -->
