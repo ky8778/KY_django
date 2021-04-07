@@ -213,7 +213,7 @@ class TestView(TestCase):
         self.navbar_test(soup)
         self.category_card_test(soup)
 
-        self.assertIn(self.category_programming.name, soup.h1.text)
+        self.assertIn(self.category_programming.name, soup.h3.text)
 
         main_area = soup.find('div', id='main-area')
         self.assertIn(self.category_programming.name, main_area.text)
