@@ -64,22 +64,6 @@ class TestView(TestCase):
         self.assertIn(f'{self.category_programming.name} ({self.category_programming.post_set.count()})', categories_card.text)
         self.assertIn(f'{self.category_music.name} ({self.category_music.post_set.count()})', categories_card.text)
         self.assertIn(f'미분류 (1)', categories_card.text)
-    
-    def test_category_page(self):
-        response = self.client.get(self.category_programming.get_absolute_url())
-        self.assertEqual(response.status_code, 200)
-
-        soup = BeautifulSoup(response.content, 'html.parser')
-        self.navbar_test(soup)
-        self.category_card_test(soup)
-
-        self.assertIn(self.category_programming.name, soup.h1.text)
-
-        main_area = soup.find('div', id='main-area')
-        self.assertIn(self.category_programming.name, main_area.text)
-        self.assertIn(self.post_001.title, main_area.text)
-        self.assertNotIn(self.post_002.title, main_area.text)
-        self.assertNotIn(self.post_003.title, main_area.text)
 
     def test_post_list(self):
         # 포스트가 있는 경우
@@ -220,3 +204,35 @@ class TestView(TestCase):
         # 2.6 첫 번째 포스트의 내용(content)이 포스트 영역에 있다.
         self.assertIn(self.post_001.content, post_area.text)
         self.assertIn(self.user_trump.username.upper(), post_area.text)
+    
+    def test_category_page(self):
+        response = self.client.get(self.category_programming.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+
+        soup = BeautifulSoup(response.content, 'html.parser')
+        self.navbar_test(soup)
+        self.category_card_test(soup)
+
+        self.assertIn(self.category_programming.name, soup.h1.text)
+
+        main_area = soup.find('div', id='main-area')
+        self.assertIn(self.category_programming.name, main_area.text)
+        self.assertIn(self.post_001.title, main_area.text)
+        self.assertNotIn(self.post_002.title, main_area.text)
+        self.assertNotIn(self.post_003.title, main_area.text)
+
+    def test_tag_page(self):
+        response = self.client.get(self.tag_hello.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+        soup = BeautifulSoup(response.content, 'html.parser')
+
+        self.navbar_test(soup)
+        self.category_card_test(soup)
+
+        self.assertIn(self.tag_hello.name, soup.h1.text)
+
+        main_area = soup.find('div', 'main-area')
+        self.assertIn(self.tag_hello.name, main_area.text)
+        self.assertIn(self.post_001.title, main_area.text)
+        self.assertNotIn(self.post_002.title, main_area.text)
+        self.assertNotIn(self.post_003.title, main_area.text)
