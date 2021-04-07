@@ -1,7 +1,19 @@
 {% extends 'blog/base.html' %}
 
 {% block main_area %}
-  <h1>Blog {% if category %}<span class="badge bg-secondary">{{ category }}</span>{% endif %}</h1>
+  <h1>
+    Blog
+  </h1>
+  {% if category %}
+    <span class="badge bg-secondary">
+      {{ category }}
+    </span>
+  {% endif %}
+  {% if tag %}
+    <span class="badge rounded-pill bg-success">
+      <i class="fas fa-tags"></i> {{ tag }}
+    </span>
+  {% endif %}
   {% if post_list.exists %}
     <!-- Blog Posts -->
     <!-- [CBV] 방법 -->
