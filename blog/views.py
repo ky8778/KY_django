@@ -1,8 +1,9 @@
 from .models import Post, Category, Tag
 # [FBV]
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 # [CBV]
 from django.views.generic import ListView, DetailView, CreateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
 # CBV
@@ -12,7 +13,6 @@ class PostList(ListView):
     # template_name = 'blog/index.html'
     # 방법2는 html 파일을 _list로 (대소문자는 구분 안하는 것 같네)
     ordering = '-pk'
-
     def get_context_data(self, **kwargs):
         context = super(PostList, self).get_context_data()
         context['categories'] = Category.objects.all()
@@ -29,9 +29,17 @@ class PostDetail(DetailView):
         context['no_category_post_count'] = Post.objects.filter(category=None).count()
         return context
 
-class PostCreate(CreateView):
+class PostCreate(LoginRequiredMixin, CreateView):
     model = Post
     fields = ['title', 'hook_text', 'content', 'head_image', 'file_upload', 'category']
+
+    def form_valid(self, form):
+        current_user = self.request.user
+        if current_user.is_authenticated:
+            form.instance.author = current_user
+            return super(PostCreate, self).form_valid(form)
+        else:
+            return redirect('/blog/')
 
 # FBV
 def category_page(request, slug):
