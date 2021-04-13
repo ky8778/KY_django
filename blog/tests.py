@@ -17,7 +17,7 @@ class TestView(TestCase):
         self.category_music = Category.objects.create(name='music', slug='music')
 
         self.tag_python_kor = Tag.objects.create(name='python_kor', slug='python_kor')
-        self.tag_python = Tag.objects.create(name='python', slug='python')
+        self.tag_python = Tag.objects.create(name='Python', slug='python')
         self.tag_hello = Tag.objects.create(name='hello', slug='hello')
 
         self.post_001 = Post.objects.create(
@@ -267,7 +267,7 @@ class TestView(TestCase):
             {
                 'title': 'Post Form 만들기',
                 'content': 'Post Form 페이지를 만듭시다.',
-                'tags_str': 'new tag; test tag, python',
+                'tags_str': 'new tag; test tag, Python',
             }
         )
         last_post = Post.objects.last()
@@ -277,7 +277,7 @@ class TestView(TestCase):
         self.assertEqual(last_post.tags.count(), 3)
         self.assertTrue(Tag.objects.get(name='new tag'))
         self.assertTrue(Tag.objects.get(name='test tag'))
-        self.assertTrue(Tag.objects.get(name='python'))
+        self.assertTrue(Tag.objects.get(name='Python'))
         self.assertEqual(Tag.objects.count(), 5)
 
     def test_update_post(self):
@@ -310,12 +310,17 @@ class TestView(TestCase):
         main_area = soup.find('div', id='main-area')
         self.assertIn('Edit Post', main_area.text)
 
+        tag_str_input = main_area.find('input', id='id_tags_str')
+        self.assertTrue(tag_str_input)
+        self.assertIn('python_kor; Python', tag_str_input.attrs['value'])
+
         response = self.client.post(
             update_post_url,
             {
                 'title': '3rd post updated',
                 'content': 'Hi, We are the one',
                 'category': self.category_music.pk,
+                'tags_str': 'python_kor; test tag, some tag',
             },
             follow=True
         )
@@ -324,3 +329,7 @@ class TestView(TestCase):
         self.assertIn('3rd post updated', main_area.text)
         self.assertIn('Hi, We are the one', main_area.text)
         self.assertIn(self.category_music.name, main_area.text)
+        self.assertIn('python_kor', main_area.text)
+        self.assertIn('test tag', main_area.text)
+        self.assertIn('some tag', main_area.text)
+        self.assertNotIn('Python', main_area.text)
