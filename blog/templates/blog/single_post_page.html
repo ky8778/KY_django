@@ -39,7 +39,7 @@
     <hr>
 
     <!-- Post Content -->
-    <p>{{ post.content }}</p>
+    <p>{{ post.get_content_markdown | safe }}</p>
 
     {% if user.is_authenticated and user == post.author %}
       <a href="/blog/update_post/{{ post.pk }}" class="btn btn-outline-warning btn-sm float-right" role="button"><i class="far fa-edit"></i> Edit Post</a>
