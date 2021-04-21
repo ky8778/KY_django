@@ -6,6 +6,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import PermissionDenied
 from django.utils.text import slugify
+from .forms import CommentForm
 
 # Create your views here.
 # CBV
@@ -29,6 +30,7 @@ class PostDetail(DetailView):
         context = super(PostDetail, self).get_context_data()
         context['categories'] = Category.objects.all()
         context['no_category_post_count'] = Post.objects.filter(category=None).count()
+        context['comment_form'] = CommentForm
         return context
 
 class PostCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
@@ -133,7 +135,7 @@ def tag_page(request, slug):
 def index(request):
     # posts = Post.objects.all()      # Query로 데이터를 가져오는 방법
     posts = Post.objects.all().order_by('-pk')      # pk 값의 역순 (생성 기준 최신 글 부터 보여줌)
-    
+
     my_posts = {
         'posts': posts,
     }
