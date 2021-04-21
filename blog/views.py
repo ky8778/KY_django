@@ -1,6 +1,6 @@
 from .models import Post, Category, Tag
 # [FBV]
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 # [CBV]
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -102,6 +102,27 @@ class PostUpdate(UpdateView):
         else:
             raise PermissionDenied
 
+''' FBV
+def index(request):
+    # posts = Post.objects.all()      # Query로 데이터를 가져오는 방법
+    posts = Post.objects.all().order_by('-pk')      # pk 값의 역순 (생성 기준 최신 글 부터 보여줌)
+
+    my_posts = {
+        'posts': posts,
+    }
+
+    return render(request, 'blog/index.html', my_posts)   # index.html 파일 렌더링
+
+def single_post_page(request, pk):
+    post = Post.objects.get(pk=pk)
+    my_post = {
+        'post': post,
+    }
+
+    return render(request, 'blog/single_post_page.html', my_post)
+'''
+
+
 # FBV
 def category_page(request, slug):
     if slug == 'no_category':
@@ -131,22 +152,19 @@ def tag_page(request, slug):
 
     return render(request, 'blog/post_list.html', context)
 
-''' FBV
-def index(request):
-    # posts = Post.objects.all()      # Query로 데이터를 가져오는 방법
-    posts = Post.objects.all().order_by('-pk')      # pk 값의 역순 (생성 기준 최신 글 부터 보여줌)
+def new_comment(request, pk):
+    if request.user.is_authenticated:
+        post = get_object_or_404(Post, pk=pk)
 
-    my_posts = {
-        'posts': posts,
-    }
-
-    return render(request, 'blog/index.html', my_posts)   # index.html 파일 렌더링
-
-def single_post_page(request, pk):
-    post = Post.objects.get(pk=pk)
-    my_post = {
-        'post': post,
-    }
-
-    return render(request, 'blog/single_post_page.html', my_post)
-'''
+        if request.method == 'POST':
+            comment_form = CommentForm(request.POST)
+            if comment_form.is_valid():
+                comment = comment_form.save(commit=False)
+                comment.post = post
+                comment.author = request.user
+                comment.save()
+                return redirect(comment.get_absolute_url())
+        else:
+            return redirect(post.get_absolute_url())
+    else:
+        raise PermissionDenied
