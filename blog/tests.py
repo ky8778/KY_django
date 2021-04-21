@@ -34,7 +34,7 @@ class TestView(TestCase):
             category=self.category_music,
             author=self.user_obama,
         )
-        
+
         self.post_003 = Post.objects.create(
             title='세 번째 포스트입니다.',
             content='category도 있어요',
@@ -107,7 +107,7 @@ class TestView(TestCase):
         self.assertNotIn(self.tag_hello.name, post_003_card.text)
         self.assertIn(self.tag_python_kor.name, post_003_card.text)
         self.assertIn(self.tag_python.name, post_003_card.text)
-        
+
         self.assertIn(self.user_trump.username.upper(), main_area.text)
         self.assertIn(self.user_obama.username.upper(), main_area.text)
 
@@ -127,7 +127,7 @@ class TestView(TestCase):
         # 1.3 페이지 타이틀은 'Blog'이다.
         soup = BeautifulSoup(response.content, 'html.parser')
         self.assertEqual(soup.title.text, 'Blog')
-        
+
         # 1.4 내비게이션 바가 있다.
         # navbar = soup.nav
         # 1.5 Blog, About Me라는 문구가 내비게이션 바에 있다.
@@ -218,7 +218,7 @@ class TestView(TestCase):
         comment_001_area = comments_area.find('div', id='comment-1')
         self.assertIn(self.comment_001.author.username, comment_001_area.text)
         self.assertIn(self.comment_001.content, comment_001_area.text)
-    
+
     def test_category_page(self):
         response = self.client.get(self.category_programming.get_absolute_url())
         self.assertEqual(response.status_code, 200)
@@ -345,3 +345,50 @@ class TestView(TestCase):
         self.assertIn('test tag', main_area.text)
         self.assertIn('some tag', main_area.text)
         self.assertNotIn('Python', main_area.text)
+
+    def test_comment_form(self):
+        self.assertEqual(Comment.objects.count(), 1)
+        self.assertEqual(self.post_001.comment_set.count(), 1)
+
+        # Not login
+        response = self.client.get(self.post_001.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+        soup = BeautifulSoup(response.content, 'html.parser')
+
+        comment_area = soup.find('div', id='comment-area')
+        self.assertIn('Log in and leave a comment', comment_area.text)
+        self.assertFalse(comment_area.find('form', id='comment-form'))
+
+        # login
+        self.client.login(username='obama', password='somepassword')
+        response = self.client.get(self.post_001.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+        soup = BeautifulSoup(response.content, 'html.parser')
+
+        comment_area = soup.find('div', id='comment-area')
+        self.assertNotIn('Log in and leave a comment', comment_area.text)
+
+        comment_form = comment_area.find('form', id='comment-form')
+        self.assertTrue(comment_form.find('textarea', id='id_content'))
+        response = self.client.post(
+            self.post_001.get_absolute_url() + 'new_comment/',
+            {
+                'content': "This is comment made by obama",
+            },
+            follow=True
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+        self.assertEqual(Comment.objects.count(), 2)
+        self.assertEqual(self.post_001.comment_set.count(), 2)
+
+        new_comment = Comment.objects.last()
+
+        soup = BeautifulSoup(response.content, 'html.parser')
+        self.assertIn(new_comment.post.title, soup.title.text)
+
+        comment_area = soup.find('div', id='comment-area')
+        new_comment_div = comment_area.find('div', id=f'comment-{new_comment.pk}')
+        self.assertIn('obama', new_comment_div.text)
+        self.assertIn('This is comment made by obama', new_comment_div.text)
