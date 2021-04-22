@@ -422,7 +422,7 @@ class TestView(TestCase):
 
         response = self.client.get('/blog/update_comment/1/')
         self.assertEqual(response.status_code, 200)
-        soup =BeautifulSoup(response.contentm 'html.parser')
+        soup =BeautifulSoup(response.content, 'html.parser')
 
         self.assertEqual('Edit Comment - Blog', soup.title.text)
         update_comment_form = soup.find('form', id='comment-form')

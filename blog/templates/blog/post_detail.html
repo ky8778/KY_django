@@ -111,6 +111,9 @@
             <h5 class="mt-0">{{ comment.author.username }} &nbsp;&nbsp;<small class="text-muted">{{ comment.created_at }}</small>
             </h5>
             <p>{{ comment.content | linebreaks }}</p>
+            {% if comment.created_at != comment.modified_at %}
+              <p class="text-muted float-right"><small>Updated: {{ comment.modified_at }}</small></p>
+            {% endif %}
           </div>
         </div>
       {% endfor %}

@@ -1,4 +1,4 @@
-from .models import Post, Category, Tag
+from .models import Post, Category, Tag, Comment
 # [FBV]
 from django.shortcuts import render, redirect, get_object_or_404
 # [CBV]
@@ -99,6 +99,17 @@ class PostUpdate(UpdateView):
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated and request.user == self.get_object().author:
             return super(PostUpdate, self).dispatch(request, *args, **kwargs)
+        else:
+            raise PermissionDenied
+
+class CommentUpdate(LoginRequiredMixin, UpdateView):
+    model = Comment
+    form_class = CommentForm
+
+    # dispatch 메서드는 웹 사이트의 방문자 요청이 POST인지 GET인지 판단하는 역할을 한다.
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated and request.user == self.get_object().author:
+            return super(CommentUpdate, self).dispatch(request, *args, **kwargs)
         else:
             raise PermissionDenied
 
