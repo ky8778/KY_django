@@ -104,8 +104,11 @@
           <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
           <div class="media-body">
             {% if user.is_authenticated and comment.author == user %}
-              <a id="comment-{{ comment.pk }}-update-bin" role="button" href="/blog/update_comment/{{ comment.pk }}/" class="btn btn-sm btn-info float-right">
+              <a id="comment-{{ comment.pk }}-update-btn" role="button" href="/blog/update_comment/{{ comment.pk }}/" class="btn btn-sm btn-info float-right">
                 edit
+              </a>
+              <a id="comment-{{ comment.pk }}-delete-btn" role="button" href="/blog/delete_comment/{{ comment.pk }}/" class="btn btn-sm btn-info float-right">
+                delete
               </a>
             {% endif %}
             <h5 class="mt-0">{{ comment.author.username }} &nbsp;&nbsp;<small class="text-muted">{{ comment.created_at }}</small>
