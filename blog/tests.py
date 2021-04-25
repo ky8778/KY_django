@@ -416,7 +416,7 @@ class TestView(TestCase):
 
         comment_area = soup.find('div', id='comment-area')
         self.assertFalse(comment_area.find('a', id='comment-2-update-btn'))
-        comment_001_update_btn = comment_area.find('a', id='comment-1-update-bin')
+        comment_001_update_btn = comment_area.find('a', id='comment-1-update-btn')
         self.assertIn('edit', comment_001_update_btn.text)
         self.assertEqual(comment_001_update_btn.attrs['href'], '/blog/update_comment/1/')
 
@@ -451,12 +451,12 @@ class TestView(TestCase):
         )
 
         self.assertEqual(Comment.objects.count(), 2)
-        self.assertEqual(self.post_001.comment_set_count(), 2)
+        self.assertEqual(self.post_001.comment_set.count(), 2)
 
         # Not login
         response = self.client.get(self.post_001.get_absolute_url())
         self.assertEqual(response.status_code, 200)
-        soup = BeautifulSoup(response.contetn, 'html.parser')
+        soup = BeautifulSoup(response.content, 'html.parser')
 
         comment_area = soup.find('div', id='comment-area')
         self.assertFalse(comment_area.find('a', id='comment-1-delete-btn'))
@@ -465,7 +465,7 @@ class TestView(TestCase):
         # trump login
         self.client.login(username='trump', password='somepassword')
         response = self.client.get(self.post_001.get_absolute_url())
-        self.assertEqual(resposne.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         soup = BeautifulSoup(response.content, 'html.parser')
 
         comment_area = soup.find('div', id='comment-area')
