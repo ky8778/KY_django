@@ -393,7 +393,6 @@ class TestView(TestCase):
         self.assertIn('obama', new_comment_div.text)
         self.assertIn('This is comment made by obama', new_comment_div.text)
 
-
     def test_comment_update(self):
         comment_by_trump = Comment.objects.create(
             post=self.post_001,
