@@ -1,0 +1,14 @@
+{% extends 'blog/base_full_width.html' %}
+
+{% block head_title %}
+  Accounts
+{% endblock %}
+
+{% block main_area %}
+<h1>Sign Up</h1>
+<form action="" method="POST">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type="submit">
+</form>
+{% endblock %}
