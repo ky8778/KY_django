@@ -3,6 +3,7 @@
 {% block main_area %}
   <h1>
     Blog
+    {% if search_info %}<small class="text-muted">{{ search_info }}</small>{% endif %}
     {% if user.is_authenticated %}
       {% if user.is_superuser or user.is_staff %}
         <a href="/blog/create_post/" class="btn btn-outline-info btn-sm float-right" role="button"><i class="far fa-plus-square"></i>&nbsp;&nbsp;New Post</a>
