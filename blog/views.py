@@ -16,6 +16,8 @@ class PostList(ListView):
     # template_name = 'blog/index.html'
     # 방법2는 html 파일을 _list로 (대소문자는 구분 안하는 것 같네)
     ordering = '-pk'
+    paginate_by = 5
+    
     def get_context_data(self, **kwargs):
         context = super(PostList, self).get_context_data()
         context['categories'] = Category.objects.all()
