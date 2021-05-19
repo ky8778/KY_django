@@ -50,6 +50,12 @@ Back-End를 Django로 구현하였습니다.
 
 ## Pages 
 
+1. [Door Page](#Door-Page)
+2. [Post List](#Post-List)
+3. [Post Detail](#Post-Detail)
+4. [Log in](#Log-in)
+5. [About Me](#About-Me)
+
 ### Door Page
 
 ![Door Page](start.png)
