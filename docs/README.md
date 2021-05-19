@@ -3,6 +3,7 @@
 ## 웹서비스
 
 ### Front-End
+
 웹브라우저에서 특정 주소를 가진 서버 컴퓨터에 요청을 보내면 서버에서 제공하는 웹사이트가 제공됩니다. (ex. html파일을 받아 렌더링해서 화면에 보여줍니다.)
 
 예를들어, a 태그를 가진 영역을 클릭하면 웹 브라우저는 다시 해당 주소를 가진 서버에 html 파일을 요청하고, 서버에서 받아 렌더링해서 보여줍니다.
@@ -45,10 +46,37 @@ Back-End를 Django로 구현하였습니다.
 - 프로젝트 생성과 동시에 관리자 페이지가 생성됨. 관리자 페이지에서 현재 웹사이트의 DB 구조를 파악할 수 있으며 수정/삭제도 가능하다.
 - Django의 보안 가아디으 따라 웹 개발을 진행하여 보안 실수를 방지할 수 있음.
 
-## Python (해보고 싶은 것들)
 
-- 웹 크롤링을 이용한 데이터 수집, 시각화
-- 업무 자동화
-- 카카오톡 일일 생일 친구 알림(등록해둔 친구 목록에 해당하는 친구 생일 알림메세지)
-- 컴퓨터비전 공부한내용&구현한내용 function 별 테스트 기능 (웹페이지 혹은 어플리케이션)
-- 웹과 앱 연동
+
+## Pages 
+
+### Door Page
+
+![Door Page](start.png)
+
+---
+
+### Post List
+
+![Post List](post_list.png)
+
+![post_list_footer](post_list_footer.png)
+
+---
+
+### Post Detail
+
+![post_detail](post_detail.png)
+
+---
+
+### Log in
+
+![Log in](login.png)
+
+---
+
+### About Me
+
+![About Me](aboutme.png)
+
