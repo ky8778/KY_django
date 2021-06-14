@@ -1,5 +1,9 @@
 # KY_django
 
+- docs : 이미지 파일, 정리자료 디렉토리
+- python : python 학습내용 소스 관리 디렉토리
+- 나머지 : django project 소스
+
 ## 웹서비스
 
 ### Front-End
@@ -50,11 +54,17 @@ Back-End를 Django로 구현하였습니다.
 
 ## Pages 
 
-1. [Door Page](#Door-Page)
-2. [Post List](#Post-List)
-3. [Post Detail](#Post-Detail)
-4. [Log in](#Log-in)
-5. [About Me](#About-Me)
+- [KY_django](#ky_django)
+  - [웹서비스](#웹서비스)
+    - [Front-End](#front-end)
+    - [Back-End](#back-end)
+      - [특징](#특징)
+  - [Pages](#pages)
+    - [Door Page](#door-page)
+    - [Post List](#post-list)
+    - [Post Detail](#post-detail)
+    - [Log in](#log-in)
+    - [About Me](#about-me)
 
 ### Door Page
 
