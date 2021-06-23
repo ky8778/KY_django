@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 from .models import Post
 
 # Create your views here.
@@ -11,6 +11,9 @@ class PostList(ListView):
 	# default context name : object_list
     context_object_name = 'posts'
     ordering = '-pk'
+
+class PostDetail(DetailView):
+    model = Post
 
 ''' FBV
 def index(request):
