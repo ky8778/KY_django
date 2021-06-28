@@ -1,21 +1,30 @@
 {% extends 'blog/base.html' %}
 {% block title %}
-Blog
+{{ post.title }} - Blog
 {% endblock %}
 {% block content %}
-  <div class="container">
-    <div class="row my-3">
-      <div class="col-9">
-        <h1>안녕하세요. KY 입니다.</h1>
+  <div class="container my-3">
+    <div class="row">
+      <!-- Post Content Column -->
+      <div class="col-lg-8">
+        <!-- Title -->
+        <h1 class="mt-4">{{ post.title }}</h1>
+        <!-- Author -->
+        <p class="lead">
+          by
+          <a href="#">Author(need to update)</a>
+        </p>
+        <p>Posted on {{ post.created_at }}</p>
+        <hr>
       </div>
-      <div class="col-3">
-        <h2>Blog</h2>
-      </div>
-      <h1>{{ post.title }}</h1>
-      <h4>{{ post.created_at }}</h4>
+      <!-- Preview Image -->
+      <img class="img-fluid rounded" src="http://placehold.it/900x300" alt="">
+      <hr>
+      <!-- Post Content -->
       <p>{{ post.content }}</p>
-      <hr/>
+      <hr>
       <h3>Comments</h3>
+      <hr>
     </div>
   </div>
 {% endblock %}

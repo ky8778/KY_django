@@ -4,10 +4,10 @@
 
 - Front-End
   - html
-  - Bootstrap : CDN (Contents delivery network로 웹사이트에서 코드를 바로 가져오는 방식입니다.)
+  - Bootstrap : CDN (Contents delivery network로 웹사이트에서 코드를 바로 가져오는 방식입니다.) v5.0.2
 
 - Back-End
-  - Django
+  - Django v3.2.4
 - Directory
   - docs : 이미지 파일, 정리자료 디렉토리
   - python : python 학습내용 소스 관리 디렉토리
