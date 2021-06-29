@@ -26,6 +26,11 @@
       <hr>
       <!-- Post Content -->
       <p>{{ post.content }}</p>
+      {% post.file_upload %}
+        <a href="{{ post.file_upload.url }}" class="btn btn-outline-dark" role="button">
+          Download : {{ post.get_file_name }}
+        </a>
+      {% endif %}
       <hr>
       <h3>Comments</h3>
       <hr>
