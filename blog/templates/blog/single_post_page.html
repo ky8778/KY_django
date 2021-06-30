@@ -24,9 +24,13 @@
         <img class="img-fluid rounded" src="https://picsum.photos/seed/{{ post.id }}/800/200" alt="random_image">
       {% endif %}
       <hr>
+      <!-- Post Hook -->
+      {% if post.hook_text %}
+        <h5 class="text-muted">{{ post.hook_text }}</h5>
+      {% endif %}
       <!-- Post Content -->
       <p>{{ post.content }}</p>
-      {% post.file_upload %}
+      {% if post.file_upload %}
         <a href="{{ post.file_upload.url }}" class="btn btn-outline-dark" role="button">
           Download : {{ post.get_file_name }}
         </a>
