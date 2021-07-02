@@ -49,3 +49,33 @@ class TestView(TestCase):
         # '아직 게시물이 없습니다.' 문구 이제 없음.
         self.assertNotIn('아직 게시물이 없습니다.', main_area.text)
         
+    def test_post_detail(self):
+        # Post 1개 생성
+        post_001 = Post.objects.create(
+            title='test1',
+            content='text1',
+        )
+        # Post url : '/blog/1/'
+        self.assertEqual(post_001.get_absolute_url(), '/blog/1/')
+
+        # Post Detail Page Test
+        # 1. URL status_code 200 : 정상
+        response = self.client.get(post_001.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+        soup = BeautifulSoup(response.content, 'html.parser')
+
+        # 2. navbar 확인
+        navbar = soup.nav
+        self.assertIn('Blog', navbar.text)
+        self.assertIn('About Me', navbar.text)
+
+        # 3. Post title 확인
+        self.assertIn(post_001.title, soup.title.text)
+
+        # 4. Post title post_area에 존재
+        main_area = soup.find('div', id='main-area')
+        post_area = main_area.find('div', id='post-area')
+        self.assertIn(post_001.title, post_area.text)
+
+        # 5. content 확인
+        self.assertIn(post_001.content, post_area.text)
