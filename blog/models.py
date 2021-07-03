@@ -3,6 +3,16 @@ from django.contrib.auth.models import User
 import os
 
 # Create your models here.
+class Category(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+    slug = models.SlugField(max_length=200, unique=True, allow_unicode=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = 'Categories' # django default 로 Categorys 로 되어있어서 변경해주기
+
 class Post(models.Model):
     title = models.CharField(max_length=30)
     hook_text = models.CharField(max_length=100, blank=True)
@@ -15,6 +25,8 @@ class Post(models.Model):
 
     # author = models.ForeignKey(User, on_delete=models.CASCADE)
     author = models.ForeignKey(User, null=True, on_delete=models.SET_NULL) # NULL 일 때 작성자명을 빈칸으로 두도록
+
+    category = models.ForeignKey(Category, null=True, blank=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return f'[{self.pk}]{self.title} :: {self.author}'
