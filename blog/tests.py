@@ -7,6 +7,20 @@ class TestView(TestCase):
     def setUp(self):
         self.client = Client()
 
+    def navbar_test(self, soup):
+        navbar = soup.nav
+        self.assertIn('Blog', navbar.text)
+        self.assertIn('About Me', navbar.text)
+
+        head_btn = navbar.find('a', text='KY')
+        self.assertEqual(head_btn.attrs['href'], '/')
+
+        blog_btn = navbar.find('a', text='Blog')
+        self.assertEqual(blog_btn.attrs['href'], '/blog/')
+
+        about_me_btn = navbar.find('a', text='About Me')
+        self.assertEqual(about_me_btn.attrs['href'], '/about_me/')
+
     def test_post_list(self):
         # Post List Page 가져오기
         response = self.client.get('/blog/')
@@ -15,12 +29,9 @@ class TestView(TestCase):
         # Page Tilte : Blog
         soup = BeautifulSoup(response.content, 'html.parser')
         self.assertEqual(soup.title.text, 'Blog')
-        # navbar 확인
-        navbar = soup.nav
         # navbar 에 Blog, About Me 확인
-        self.assertIn('Blog', navbar.text)
-        self.assertIn('About Me', navbar.text)
-
+        self.navbar_test(soup)
+        
         # Post가 없는 경우
         self.assertEqual(Post.objects.count(), 0)
         # main area에 '아직 게시물이 없습니다' 문구
@@ -65,9 +76,7 @@ class TestView(TestCase):
         soup = BeautifulSoup(response.content, 'html.parser')
 
         # 2. navbar 확인
-        navbar = soup.nav
-        self.assertIn('Blog', navbar.text)
-        self.assertIn('About Me', navbar.text)
+        self.navbar_test(soup)
 
         # 3. Post title 확인
         self.assertIn(post_001.title, soup.title.text)
