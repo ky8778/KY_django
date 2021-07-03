@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.test import TestCase, Client
 from .models import Post
 from bs4 import BeautifulSoup
@@ -6,6 +7,8 @@ from bs4 import BeautifulSoup
 class TestView(TestCase):
     def setUp(self):
         self.client = Client()
+        self.user_one = User.objects.create_user(username='one', password='one1')
+        self.user_two = User.objects.create_user(username='two', password='two2')
 
     def navbar_test(self, soup):
         navbar = soup.nav
@@ -42,10 +45,12 @@ class TestView(TestCase):
         post_001 = Post.objects.create(
             title='Test1',
             content='Test1',
+            author=self.user_one,
         )
         post_002 = Post.objects.create(
             title='Test2',
             content='Test2',
+            author=self.user_two,
         )
         self.assertEqual(Post.objects.count(), 2)
 
@@ -59,12 +64,17 @@ class TestView(TestCase):
         self.assertIn(post_002.title, main_area.text)
         # '아직 게시물이 없습니다.' 문구 이제 없음.
         self.assertNotIn('아직 게시물이 없습니다.', main_area.text)
+
+        # Author
+        self.assertIn(self.user_one.username.upper(), main_area.text)
+        self.assertIn(self.user_two.username.upper(), main_area.text)
         
     def test_post_detail(self):
         # Post 1개 생성
         post_001 = Post.objects.create(
             title='test1',
             content='text1',
+            author=self.user_one,
         )
         # Post url : '/blog/1/'
         self.assertEqual(post_001.get_absolute_url(), '/blog/1/')
@@ -88,3 +98,6 @@ class TestView(TestCase):
 
         # 5. content 확인
         self.assertIn(post_001.content, post_area.text)
+
+        # 6. author 확인
+        self.assertIn(self.user_one.username.upper(), main_area.text)
