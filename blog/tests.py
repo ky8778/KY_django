@@ -143,7 +143,7 @@ class TestView(TestCase):
     
     def test_category_page(self):
         response = self.client.get(self.category_game.get_absolute_url())
-        self.aseertEqaul(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
         soup = BeautifulSoup(response.content, 'html.parser')
         self.navbar_test(soup)

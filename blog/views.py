@@ -47,3 +47,19 @@ def single_post_page(request, pk):
         'post': post
     }
     return render(request, 'blog/single_post_page.html', context)
+
+def category_page(request, slug):
+    if slug == 'no_category':
+        category = '미분류'
+        posts = Post.objects.filter(category=None)
+    else:
+        category = Category.objects.get(slug=slug)
+        posts = Post.objects.filter(category=category)
+        
+    context = {
+        'posts': posts,
+        'categories': Category.objects.all(),
+        'no_category_post_count': Post.objects.filter(category=None).count(),
+        'category': category,
+    }
+    return render(request, 'blog/blog.html', context)

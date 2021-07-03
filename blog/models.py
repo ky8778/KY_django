@@ -10,6 +10,9 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        return f'/blog/category/{self.slug}/'
+
     class Meta:
         verbose_name_plural = 'Categories' # django default 로 Categorys 로 되어있어서 변경해주기
 
