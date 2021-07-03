@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView
-from .models import Post
+from .models import Post, Category
 
 # Create your views here.
 ''' CBV '''
@@ -11,6 +11,16 @@ class PostList(ListView):
 	# default context name : object_list
     context_object_name = 'posts'
     ordering = '-pk'
+
+    # ListView를 상속받은 PostList에서 model = Post 로 선언하면
+    # get_context_data 에서 post_list = Post.objects.all() 을 명령함
+    # Template 에서 {% for p in post_list %} 와 같이 사용가능
+    # context 커스텀해서 사용하기
+    def get_context_data(self, **kwargs):
+        context = super(PostList, self).get_context_data()
+        context['categories'] = Category.objects.all()
+        context['no_category_post_count'] = Post.objects.filter(category=None).count()
+        return context
 
 class PostDetail(DetailView):
     model = Post
