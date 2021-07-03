@@ -114,18 +114,12 @@ class TestView(TestCase):
             self.assertNotIn('아직 게시물이 없습니다.', main_area.text)
 
     def test_post_detail(self):
-        # Post 1개 생성
-        post_001 = Post.objects.create(
-            title='test1',
-            content='text1',
-            author=self.user_one,
-        )
         # Post url : '/blog/1/'
-        self.assertEqual(post_001.get_absolute_url(), '/blog/1/')
+        self.assertEqual(self.post_001.get_absolute_url(), '/blog/1/')
 
         # Post Detail Page Test
         # 1. URL status_code 200 : 정상
-        response = self.client.get(post_001.get_absolute_url())
+        response = self.client.get(self.post_001.get_absolute_url())
         self.assertEqual(response.status_code, 200)
         soup = BeautifulSoup(response.content, 'html.parser')
 
@@ -133,15 +127,16 @@ class TestView(TestCase):
         self.navbar_test(soup)
 
         # 3. Post title 확인
-        self.assertIn(post_001.title, soup.title.text)
+        self.assertIn(self.post_001.title, soup.title.text)
 
         # 4. Post title post_area에 존재
         main_area = soup.find('div', id='main-area')
         post_area = main_area.find('div', id='post-area')
-        self.assertIn(post_001.title, post_area.text)
+        self.assertIn(self.post_001.title, post_area.text)
+        self.assertIn(self.category_game.name, post_area.text)
 
         # 5. content 확인
-        self.assertIn(post_001.content, post_area.text)
+        self.assertIn(self.post_001.content, post_area.text)
 
         # 6. author 확인
         self.assertIn(self.user_one.username.upper(), main_area.text)
