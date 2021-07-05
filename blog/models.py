@@ -16,6 +16,16 @@ class Category(models.Model):
     class Meta:
         verbose_name_plural = 'Categories' # django default 로 Categorys 로 되어있어서 변경해주기
 
+class Tag(models.Model):
+    name = models.CharField(max_length=50)
+    slug = models.SlugField(max_length=200, unique=True, allow_unicode=True)
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return f'/blog/tag/{self.slug}/'
+
 class Post(models.Model):
     title = models.CharField(max_length=30)
     hook_text = models.CharField(max_length=100, blank=True)
@@ -30,6 +40,8 @@ class Post(models.Model):
     author = models.ForeignKey(User, null=True, on_delete=models.SET_NULL) # NULL 일 때 작성자명을 빈칸으로 두도록
 
     category = models.ForeignKey(Category, null=True, blank=True, on_delete=models.SET_NULL)
+
+    tags = models.ManyToManyField(Tag, blank=True)
 
     def __str__(self):
         return f'[{self.pk}]{self.title} :: {self.author}'
