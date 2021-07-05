@@ -5,8 +5,13 @@
   <h1>
     Blog
     {% if category %}
-      <span class="badge badge-secondary float-right">
+      <span class="badge bg-secondary float-right">
         {{ category }}
+      </span>
+    {% endif %}
+    {% if tag %}
+      <span class="badge bg-secondary float-right">
+        {{ tag }} : {{ tag.post_set.count }}
       </span>
     {% endif %}
   </h1>
@@ -35,10 +40,11 @@
             <h5 class="text-muted">{{ p.hook_text }}</h5>
           {% endif %}
           <p class="card-text">{{ p.content | truncatewords:45 }}</p>
+          <hr>
           <!-- Tag -->
           {% if p.tags.exists %}
             {% for tag in p.tags.iterator %}
-              <a href="{{ tag.get_absolute_url }}"><span class="badge badge-pill badge-light">{{ tag }}</span></a>
+              <a href="{{ tag.get_absolute_url }}"><span class="badge badge-pill bg-secondary">{{ tag }}</span></a>
             {% endfor %}
           {% endif %}
           <br>
