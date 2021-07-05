@@ -35,6 +35,14 @@
             <h5 class="text-muted">{{ p.hook_text }}</h5>
           {% endif %}
           <p class="card-text">{{ p.content | truncatewords:45 }}</p>
+          <!-- Tag -->
+          {% if p.tags.exists %}
+            {% for tag in p.tags.iterator %}
+              <a href="{{ tag.get_absolute_url }}"><span class="badge badge-pill badge-light">{{ tag }}</span></a>
+            {% endfor %}
+          {% endif %}
+          <br>
+          <br>
           <a href="{{ p.get_absolute_url }}" class="btn btn-primary">Read More &rarr;</a>
         </div>
         <!-- Post Footer -->
