@@ -208,7 +208,7 @@ class TestView(TestCase):
         self.assertNotEqual(response.status_code, 200)
 
         # login
-        self.client.login(username='tester', password='tester')
+        self.client.login(username='one', password='one1')
 
         response = self.client.get('/blog/create_post/')
         self.assertEqual(response.status_code, 200)
@@ -217,3 +217,15 @@ class TestView(TestCase):
         self.assertEqual('Create Post - Blog', soup.title.text)
         main_area = soup.find('div', id='main-area')
         self.assertIn('Create New Post', main_area.text)
+
+        self.client.post(
+            '/blog/create_post/',
+            {
+                'title': 'Post Form Create',
+                'content': 'Post Form Page create',
+            }
+        )
+        last_post = Post.objects.last()
+        self.assertEqual(last_post.title, 'Post Form Create')
+        self.assertEqual(last_post.author.username, 'one')
+    
