@@ -1,16 +1,25 @@
 {% extends 'blog/base.html' %}
 {% block title %}Blog{% endblock %}
 {% block main_area %}
+  <!-- Login 했을 때 New Post activate-->
+  {% if user.is_authenticated %}
+    {% if user.is_superuser or user.is_staff %}
+      <a class="btn btn-info btn-sm float-end" href="/blog/create_post/" role="button">
+        New Post
+      </a>
+    {% endif %}
+  {% endif %}
+
   <!-- Category -->
   <h1>
     Blog
     {% if category %}
-      <span class="badge bg-secondary float-right">
+      <span class="badge bg-secondary float-end">
         {{ category }}
       </span>
     {% endif %}
     {% if tag %}
-      <span class="badge bg-secondary float-right">
+      <span class="badge bg-secondary float-end">
         {{ tag }} : {{ tag.post_set.count }}
       </span>
     {% endif %}
@@ -29,9 +38,9 @@
         <div class="card-body">
           <!-- Post Category -->
           {% if p.category %}
-            <span class="badge badge-secondary float-right">{{ p.category }}</span>
+            <span class="badge badge-secondary float-end">{{ p.category }}</span>
           {% else %}
-            <span class="badge badge-secondary float-right">미분류</span>
+            <span class="badge badge-secondary float-end">미분류</span>
           {% endif %}
           <h2 class="card-title">{{ p.title }}</h2>
           <h4></h4>

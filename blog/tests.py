@@ -13,6 +13,10 @@ class TestView(TestCase):
         self.user_one = User.objects.create_user(username='one', password='one1')
         self.user_two = User.objects.create_user(username='two', password='two2')
         
+        # user 권한 변경
+        self.user_one.is_staff = True
+        self.user_one.save()
+
         # category 생성
         self.category_game = Category.objects.create(name='game', slug='game')
         self.category_music = Category.objects.create(name='music', slug='music')
@@ -207,11 +211,16 @@ class TestView(TestCase):
         response = self.client.get('/blog/create_post/')
         self.assertNotEqual(response.status_code, 200)
 
-        # login
-        self.client.login(username='one', password='one1')
+        # not staff login
+        self.client.login(username='two', password='two2')
+        response = self.client.get('/blog/create_post/')
+        self.assertNotEqual(response.status_code, 200)
 
+        # staff login
+        self.client.login(username='one', password='one1')
         response = self.client.get('/blog/create_post/')
         self.assertEqual(response.status_code, 200)
+
         soup = BeautifulSoup(response.content, 'html.parser')
         
         self.assertEqual('Create Post - Blog', soup.title.text)
