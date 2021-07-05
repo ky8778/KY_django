@@ -1,16 +1,26 @@
 from django.contrib.auth.models import User
 from django.test import TestCase, Client
-from .models import Post, Category
+from .models import Post, Category, Tag
 from bs4 import BeautifulSoup
 
 # Create your tests here.
 class TestView(TestCase):
     def setUp(self):
+        # Client 선언
         self.client = Client()
+
+        # user 생성
         self.user_one = User.objects.create_user(username='one', password='one1')
         self.user_two = User.objects.create_user(username='two', password='two2')
+        
+        # category 생성
         self.category_game = Category.objects.create(name='game', slug='game')
         self.category_music = Category.objects.create(name='music', slug='music')
+        
+        # Tag 생성
+        self.tag_test = Tag.objects.create(name='testtag', slug='testtag')
+        self.tag_game = Tag.objects.create(name='gametag', slug='gametag')
+        self.tag_music = Tag.objects.create(name='musictag', slug='musictag')
 
         # Post가 3개 생성
         self.post_001 = Post.objects.create(
@@ -19,12 +29,17 @@ class TestView(TestCase):
             category=self.category_game,
             author=self.user_one,
         )
+        self.post_001.tags.add(self.tag_game)
+        
         self.post_002 = Post.objects.create(
             title='Test2',
             content='Test2',
             category=self.category_music,
             author=self.user_two,
         )
+        self.post_002.tags.add(self.tag_music)
+        self.post_003.tags.add(self.tag_test)
+
         self.post_003 = Post.objects.create(
             title='Test3',
             content='Test3',
@@ -86,15 +101,24 @@ class TestView(TestCase):
         post_001_card = main_area.find('div', id='post-1')
         self.assertIn(self.post_001.title, post_001_card.text)
         self.assertIn(self.post_001.category.name, post_001_card.text)
+        self.assertIn(self.tag_music, post_001_card.text)
+        self.assertNotIn(self.tag_game, post_001_card.text)
+        self.assertNotIn(self.tag_test, post_001_card.text)
 
         post_002_card = main_area.find('div', id='post-2')
         self.assertIn(self.post_002.title, post_002_card.text)
         self.assertIn(self.post_002.category.name, post_002_card.text)
+        self.assertNotIn(self.tag_music, post_002_card.text)
+        self.assertIn(self.tag_game, post_002_card.text)
+        self.assertIn(self.tag_test, post_002_card.text)
 
         post_003_card = main_area.find('div', id='post-3')
         self.assertIn(self.post_003.title, post_003_card.text)
         self.assertIn('미분류', post_003_card.text)
-        
+        self.assertNotIn(self.tag_music, post_003_card.text)
+        self.assertNotIn(self.tag_game, post_003_card.text)
+        self.assertNotIn(self.tag_test, post_003_card.text)
+
         # Author
         self.assertIn(self.user_one.username.upper(), main_area.text)
         self.assertIn(self.user_two.username.upper(), main_area.text)
