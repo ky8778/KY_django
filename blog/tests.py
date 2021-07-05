@@ -38,7 +38,7 @@ class TestView(TestCase):
             author=self.user_two,
         )
         self.post_002.tags.add(self.tag_music)
-        self.post_003.tags.add(self.tag_test)
+        self.post_002.tags.add(self.tag_test)
 
         self.post_003 = Post.objects.create(
             title='Test3',
@@ -101,23 +101,23 @@ class TestView(TestCase):
         post_001_card = main_area.find('div', id='post-1')
         self.assertIn(self.post_001.title, post_001_card.text)
         self.assertIn(self.post_001.category.name, post_001_card.text)
-        self.assertIn(self.tag_music, post_001_card.text)
-        self.assertNotIn(self.tag_game, post_001_card.text)
-        self.assertNotIn(self.tag_test, post_001_card.text)
+        self.assertIn(self.tag_music.name, post_001_card.text)
+        self.assertNotIn(self.tag_game.name, post_001_card.text)
+        self.assertNotIn(self.tag_test.name, post_001_card.text)
 
         post_002_card = main_area.find('div', id='post-2')
         self.assertIn(self.post_002.title, post_002_card.text)
         self.assertIn(self.post_002.category.name, post_002_card.text)
-        self.assertNotIn(self.tag_music, post_002_card.text)
-        self.assertIn(self.tag_game, post_002_card.text)
-        self.assertIn(self.tag_test, post_002_card.text)
+        self.assertNotIn(self.tag_music.name, post_002_card.text)
+        self.assertIn(self.tag_game.name, post_002_card.text)
+        self.assertIn(self.tag_test.name, post_002_card.text)
 
         post_003_card = main_area.find('div', id='post-3')
         self.assertIn(self.post_003.title, post_003_card.text)
         self.assertIn('미분류', post_003_card.text)
-        self.assertNotIn(self.tag_music, post_003_card.text)
-        self.assertNotIn(self.tag_game, post_003_card.text)
-        self.assertNotIn(self.tag_test, post_003_card.text)
+        self.assertNotIn(self.tag_music.name, post_003_card.text)
+        self.assertNotIn(self.tag_game.name, post_003_card.text)
+        self.assertNotIn(self.tag_test.name, post_003_card.text)
 
         # Author
         self.assertIn(self.user_one.username.upper(), main_area.text)
