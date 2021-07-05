@@ -164,6 +164,11 @@ class TestView(TestCase):
 
         # 6. author 확인
         self.assertIn(self.user_one.username.upper(), main_area.text)
+
+        # Tag 확인
+        self.assertIn(self.tag_game.name, post_area.text)
+        self.assertNotIn(self.tag_music.name, post_area.text)
+        self.assertNotIn(self.tag_test.name, post_area.text)
     
     def test_category_page(self):
         response = self.client.get(self.category_game.get_absolute_url())
