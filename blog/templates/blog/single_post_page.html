@@ -40,6 +40,7 @@
       {% endfor %}
     {% endif %}
 
+    <!-- File Upload -->
     {% if post.file_upload %}
       <a href="{{ post.file_upload.url }}" class="btn btn-outline-dark" role="button">
         Download : {{ post.get_file_name }}
