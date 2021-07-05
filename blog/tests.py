@@ -238,3 +238,40 @@ class TestView(TestCase):
         self.assertEqual(last_post.title, 'Post Form Create')
         self.assertEqual(last_post.author.username, 'one')
     
+    def test_update_post(self):
+        update_post_url = f'/blog/update_post/{self.post_002.pk}/'
+
+        # not login
+        response = self.client.get(update_post_url)
+        self.assertNotEqual(response.status_code, 200)
+
+        # not author login
+        self.assertNotEqual(self.post_002.author, self.user_one)
+        self.client.login(username='one', password='one1')
+        response = self.client.get(update_post_url)
+        self.assertEqual(response.status_code, 403)
+
+        # author login
+        self.client.login(username='two', password='two2')
+        response = self.client.get(update_post_url)
+        self.assertEqual(response.status_code, 200)
+
+        soup = BeautifulSoup(response.content, 'html.parser')
+
+        self.assertEqual('Edit Post - Blog', soup.title.text)
+        main_area = soup.find('div', id='main-area')
+        self.assertIn('Edit Post', main_area.text)
+
+        context = {
+            'title': 'Update Post',
+            'content': 'Hello',
+            'category': self.category_game.pk,
+        }
+        response = self.client.post(update_post_url, context, follow=True)
+
+        soup = BeautifulSoup(response.content, 'html.parser')
+
+        main_area = soup.find('div', id='main-area')
+        self.assertIn('Update Post', main_area.text)
+        self.assertIn('Hello', main_area.text)
+        self.assertIn(self.category_game.name, main_area.text)

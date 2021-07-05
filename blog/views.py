@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Post, Category, Tag
+from django.core.exceptions import PermissionDenied
 
 
 # Create your views here.
@@ -40,7 +41,7 @@ class PostDetail(DetailView):
 # python은 class에서 Mixin을 사용하면 다른 클래스의 메서드를 추가할 수 있음
 class PostCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Post
-    fields = ['title', 'hook_text', 'content', 'head_image', 'file_upload', 'category']
+    fields = ['title', 'hook_text', 'content', 'head_image', 'file_upload', 'category', 'tags']
     # default template name : blog/post_form.html
 
     def test_func(self):
@@ -54,6 +55,21 @@ class PostCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
             return super(PostCreate, self).form_valid(form)
         else:
             return redirect('/blog/')
+
+
+class PostUpdate(LoginRequiredMixin, UpdateView):
+    model = Post
+    fields = ['title', 'hook_text', 'content', 'head_image', 'file_upload', 'category', 'tags']
+    # default template name : blog/post_form.html
+    template_name = 'blog/post_update_form.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated and request.user == self.get_object().author:
+            # self.get_object().author 는 Post.objects.get(pk=pk) 와 동일한 기능
+            return super(PostUpdate, self).dispatch(request, *args, **kwargs)
+        else:
+            # 403 Error Throw
+            raise PermissionDenied
 
 
 ''' FBV '''
