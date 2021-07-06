@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'blog',
     'home',
     'crispy_forms',
+    'markdownx',
 ]
 
 MIDDLEWARE = [

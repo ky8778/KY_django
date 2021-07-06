@@ -38,8 +38,8 @@
     {% if post.hook_text %}
       <h5 class="text-muted">{{ post.hook_text }}</h5>
     {% endif %}
-    <!-- Post Content -->
-    <p>{{ post.content }}</p>
+    <!-- Post Content safe는 이스케이핑 방지하는 필터 -->
+    <p>{{ post.get_content_markdown | safe }}</p>
 
     <!-- Tag -->
     {% if post.tags.exists %}

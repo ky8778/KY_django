@@ -48,7 +48,8 @@
           {% if p.hook_text %}
             <h5 class="text-muted">{{ p.hook_text }}</h5>
           {% endif %}
-          <p class="card-text">{{ p.content | truncatewords:45 }}</p>
+          <!-- html로 넘어오기 때문에 truncatewords 수정 -->
+          <p class="card-text">{{ p.get_content_markdown | truncatewords_html:45 | safe }}</p>
           <hr>
           <!-- Tag -->
           {% if p.tags.exists %}
