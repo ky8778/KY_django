@@ -3,6 +3,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Post, Category, Tag
 from django.core.exceptions import PermissionDenied
+from django.utils.text import slugify
 
 
 # Create your views here.
@@ -41,18 +42,36 @@ class PostDetail(DetailView):
 # python은 class에서 Mixin을 사용하면 다른 클래스의 메서드를 추가할 수 있음
 class PostCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Post
-    fields = ['title', 'hook_text', 'content', 'head_image', 'file_upload', 'category', 'tags']
+    fields = ['title', 'hook_text', 'content', 'head_image', 'file_upload', 'category']
+   
     # default template name : blog/post_form.html
 
     def test_func(self):
         return self.request.user.is_superuser or self.request.user.is_staff
 
     # default form_valid 재정의, login한 author 없으면 redirect
+    # form_valid : form 안에 들어온 값을 바탕으로 모델에 해당하는 인스턴스를 만들어 DB에 저장한 뒤
+    # 해당 인스턴스의 경로로 리다이렉트하는 역할
     def form_valid(self, form):
         current_user = self.request.user
         if current_user.is_authenticated and (current_user.is_staff or current_user.is_superuser):
             form.instance.author = current_user
-            return super(PostCreate, self).form_valid(form)
+            response = super(PostCreate, self).form_valid(form)
+
+            tags_str = self.request.POST.get('tags_str')
+            if tags_str:
+                tags_str = tags_str.strip()
+                tags_str = tags_str.replace(',', ';')
+                tags_list = tags_str.split(';')
+
+                for t in tags_list:
+                    t = t.strip()
+                    tag, is_tag_created = Tag.objects.get_or_create(name=t)
+                    if is_tag_created:
+                        tag.slug = slugify(t, allow_unicode=True)
+                        tag.save()
+                    self.object.tags.add(tag)
+            return response
         else:
             return redirect('/blog/')
 
@@ -60,6 +79,7 @@ class PostCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 class PostUpdate(LoginRequiredMixin, UpdateView):
     model = Post
     fields = ['title', 'hook_text', 'content', 'head_image', 'file_upload', 'category', 'tags']
+    
     # default template name : blog/post_form.html
     template_name = 'blog/post_update_form.html'
 
