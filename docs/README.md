@@ -18,6 +18,7 @@
   > pip를 이용하여 여러가지 Python library를 활용하였습니다.
   - Pillow : Image 를 쉽게 다룰 수 있습니다.
   - beautifulsoup4 : TDD 개발을 진행할 때, HTML 페이지의 요소들을 쉽게 다룰 수 있습니다.
+  - django-crispy-forms : input form 꾸미기
 
 ## Pages
 
