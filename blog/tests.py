@@ -271,10 +271,15 @@ class TestView(TestCase):
         main_area = soup.find('div', id='main-area')
         self.assertIn('Edit Post', main_area.text)
 
+        tag_str_input = main_area.find('input', id='id_tags_str')
+        self.assertTrue(tag_str_input)
+        self.assertIn('testtag; musictag', tag_str_input.attrs['value'])
+
         context = {
             'title': 'Update Post',
             'content': 'Hello',
             'category': self.category_game.pk,
+            'tags_str': 'python study; musictag, ttest tag',
         }
         response = self.client.post(update_post_url, context, follow=True)
 
@@ -284,3 +289,7 @@ class TestView(TestCase):
         self.assertIn('Update Post', main_area.text)
         self.assertIn('Hello', main_area.text)
         self.assertIn(self.category_game.name, main_area.text)
+        self.assertIn('python study', main_area.text)
+        self.assertIn('musictag', main_area.text)
+        self.assertIn('ttest tag', main_area.text)
+        self.assertNotIn('testtag', main_area.text)
