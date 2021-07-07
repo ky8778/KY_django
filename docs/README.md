@@ -20,6 +20,7 @@
   - beautifulsoup4 : TDD 개발을 진행할 때, HTML 페이지의 요소들을 쉽게 다룰 수 있습니다.
   - django-crispy-forms : input form 꾸미기
   - django-markdownx : markdown 문법 적용하여 Post 만들기
+  - django-allauth : google, naver, kakao 등의 api 를 호출하여 로그인하도록 구현하는 중이지만 해당 Repository 에는 업로드하지 않을 예정
 
 ## ERD
 
