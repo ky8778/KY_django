@@ -21,6 +21,10 @@
   - django-crispy-forms : input form 꾸미기
   - django-markdownx : markdown 문법 적용하여 Post 만들기
 
+## ERD
+
+![ERD](ERD.PNG)
+
 ## Pages
 
 - [KY_django](#ky_django)
