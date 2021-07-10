@@ -57,8 +57,25 @@
     {% endif %}
   </div>
   <hr>
-  <div id="comment-area">
-    <h3>Comments</h3>
+  
+  <!-- Comments -->
+  <div id='comment-area'>
+    {% if post.comment_set.exists %}
+      {% for comment in post.comment_set.iterator %}
+      <div class="media mb-4" id="comment-{{ comment.pk }}">
+        <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
+        <div class="media-body">
+          <h5 class="mt-0">
+            {{ comment.author.username }} &nbsp;&nbsp;
+            <small class="text_muted">
+              {{ comment.created_at }}
+            </small>
+          </h5>
+          <p>{{ comment.content | linebreaks }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    {% endif %}
   </div>
   <hr>
 {% endblock %}

@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.test import TestCase, Client
-from .models import Post, Category, Tag
+from .models import Post, Category, Tag, Comment
 from bs4 import BeautifulSoup
 
 # Create your tests here.
@@ -49,6 +49,12 @@ class TestView(TestCase):
             content='Test3',
             # no category
             author=self.user_one,
+        )
+
+        self.comment_001 = Comment.objects.create(
+            post=self.post_001,
+            author=self.user_one,
+            content="First Comment",
         )
 
 
@@ -173,6 +179,12 @@ class TestView(TestCase):
         self.assertIn(self.tag_game.name, post_area.text)
         self.assertNotIn(self.tag_music.name, post_area.text)
         self.assertNotIn(self.tag_test.name, post_area.text)
+
+        # Comment 확인
+        comments_area = soup.find('div', id='comment-area')
+        comment_001_area = comments_area.find('div', id='comment-1')
+        self.assertIn(self.comment_001.author.username, comment_001_area.text)
+        self.assertIn(self.comment_001.content, comment_001_area.text)
     
     def test_category_page(self):
         response = self.client.get(self.category_game.get_absolute_url())
