@@ -1,7 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Post, Category, Tag
+from .forms import CommentForm
 from django.core.exceptions import PermissionDenied
 from django.utils.text import slugify
 
@@ -36,6 +37,7 @@ class PostDetail(DetailView):
         context = super(PostDetail, self).get_context_data()
         context['categories'] = Category.objects.all()
         context['no_category_post_count'] = Post.objects.filter(category=None).count()
+        context['comment_form'] = CommentForm
         return context
 
 
@@ -165,3 +167,23 @@ def tag_page(request, slug):
     }
 
     return render(request, 'blog/blog.html', context)
+
+def new_comment(request, pk):
+    # View 에서 로그인 되었을 떄만 하도록 만들어두었으나,
+    # 비정상적으로 접근을 시도할 수도 있음.
+    # 이런 경우 PermissionDenied 발생
+    if request.user.is_authenticated:
+        post = get_object_or_404(Post, pk=pk)   # pk가 없을 경우 404 error 발생
+
+        if request.method == 'POST':
+            comment_form = CommentForm(request.POST)
+            if comment_form.is_valid():
+                comment = comment_form.save(commit=False)
+                comment.post = post
+                comment.author = request.user
+                comment.save()
+                return redirect(comment.get_absolute_url())
+        else:
+            return redirect(post.get_absolute_url())
+    else:
+        raise PermissionDenied

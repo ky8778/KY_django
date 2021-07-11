@@ -305,3 +305,53 @@ class TestView(TestCase):
         self.assertIn('musictag', main_area.text)
         self.assertIn('ttest tag', main_area.text)
         self.assertNotIn('testtag', main_area.text)
+
+    def test_comment_form(self):
+        # 이미 댓글 하나 SetUp 에서 생성되었음.
+        self.assertEqual(Comment.objects.count(), 1)
+        self.assertEqual(self.post_001.comment_set.count(), 1)
+
+        # 로그인 전에는 form이 뜨면 안됨
+        response = self.client.get(self.post_001.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+        soup = BeautifulSoup(response.content, 'html.parser')
+
+        comment_area = soup.find('div', id='comment-area')
+        self.assertIn('Log in and leave a comment', comment_area.text)
+        self.assertFalse(comment_area.find('form', id='commnet-form'))
+
+        # 로그인 후에는 form 존재
+        self.client.login(username='one', password='one1')
+        response = self.client.get(self.post_001.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+        soup = BeautifulSoup(response.content, 'html.parser')
+
+        comment_area = soup.find('div', id='comment-area')
+        self.assertNotIn('Log in and leave a comment', comment_area.text)
+
+        comment_form = soup.find('form', id='comment-form')
+        self.assertTrue(comment_form.find('textarea', id='id_content'))
+
+        # comment POST request
+        response = self.client.post(
+            self.post_001.get_absolute_url() + 'new_comment/',
+            {
+                'content': 'This is comment by one',
+            },
+            follow=True         # 서버 처리 후 redirect
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+        self.assertEqual(Comment.objects.count(), 2)
+        self.assertEqual(self.post_001.comment_set.count(), 2)
+
+        new_comment = Comment.objects.last()
+
+        soup = BeautifulSoup(response.content, 'html.parser')
+        self.assertIn(new_comment.post.title, soup.title.text)
+
+        comment_area = soup.find('div', id='comment-area')
+        new_comment_div = comment_area.find('div', id=f'comment-{new_comment.pk}')
+        self.assertIn('one', new_comment_div.text)
+        self.assertIn('This is comment by one', new_comment_div.text)
