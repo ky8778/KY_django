@@ -424,8 +424,8 @@ class TestView(TestCase):
         soup = BeautifulSoup(response.content, 'html.parser')
 
         comment_area = soup.find('div', id='comment-area')
-        self.assertFalse(comment_area.find('a', id='comment-1-delete-btn'))
-        self.assertFalse(comment_area.find('a', id='comment-2-delete-btn'))
+        self.assertFalse(comment_area.find('button', id='comment-1-delete-modal-btn'))
+        self.assertFalse(comment_area.find('button', id='comment-2-delete-modal-btn'))
 
         # Two log in
         self.client.login(username='two', password='two2')
@@ -434,13 +434,13 @@ class TestView(TestCase):
         soup = BeautifulSoup(response.content, 'html.parser')
 
         comment_area = soup.find('div', id='comment-area')
-        self.assertFalse(comment_area.find('a', id='comment-1-delete-btn'))
+        self.assertFalse(comment_area.find('button', id='comment-1-delete-modal-btn'))
         comment_002_delete_modal_btn = comment_area.find(
-            'a', id='comment-2-delete-btn'
+            'button', id='comment-2-delete-modal-btn'
         )
-        self.assertIn('delete', comment_002_delete_modal_btn.text)
+        self.assertIn('Delete', comment_002_delete_modal_btn.text)
         self.assertEqual(
-            comment_002_delete_modal_btn.attrs['data-target'],
+            comment_002_delete_modal_btn.attrs['data-bs-target'],
             '#deleteCommentModal-2'
         )
 
@@ -454,7 +454,7 @@ class TestView(TestCase):
 
         response = self.client.get('/blog/delete_comment/2/', follow=True)
         self.assertEqual(response.status_code, 200)
-        soup = BeautifulSoup(response.content, 200)
+        soup = BeautifulSoup(response.content, 'html.parser')
         self.assertIn(self.post_001.title, soup.title.text)
         comment_area = soup.find('div', id='comment-area')
         self.assertNotIn('Two comment', comment_area.text)

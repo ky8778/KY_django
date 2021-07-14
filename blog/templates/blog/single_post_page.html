@@ -89,34 +89,36 @@
         <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
         <div class="media-body">
           {% if user.is_authenticated and comment.author == user %}
-          <div class="float-right">
-            <a href="/blog/update_comment/{{ comment.pk }}/" role="button" class="btn btn-sm btn-info float-right" id='comment-{{ comment.pk }}-update-btn'>
-              Edit
-            </a>
-            <!-- Button trigger modal -->
-            <button type="button" id="comment-{{ comment.pk }}-delete-modal-btn" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteCommentModal-{{ comment.pk }}">
-              Delete
-            </button>
-          </div>
+            <div class="float-right">
+              <a href="/blog/update_comment/{{ comment.pk }}/" role="button" class="btn btn-sm btn-info float-right" id='comment-{{ comment.pk }}-update-btn'>
+                Edit
+              </a>
+              <!-- Button trigger modal -->
+              <button type="button" id="comment-{{ comment.pk }}-delete-modal-btn" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteCommentModal-{{ comment.pk }}">
+                Delete
+              </button>
+            </div>
 
-          <!-- Modal -->
-          <div class="modal fade" id="deleteCommentModal-{{ comment.pk }}" tabindex="-1" aria-labelledby="deleteCommentModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">Comment Delete</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                  Are you sure?
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-primary">Delete</button>
+            <!-- Modal -->
+            <div class="modal fade" id="deleteCommentModal-{{ comment.pk }}" tabindex="-1" aria-labelledby="deleteCommentModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Are you sure?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <del>{{ comment | linebreaks }}</del>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <a href="/blog/delete_comment/{{ comment.pk }}/" role="button" class="btn btn-danger">Delete</a>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
           {% endif %}
           <h5 class="mt-0">
             {{ comment.author.username }} &nbsp;&nbsp;
