@@ -16,6 +16,7 @@ class PostList(ListView):
 	# default context name : object_list
     context_object_name = 'posts'
     ordering = '-pk'
+    paginate_by = 5
 
     # ListView를 상속받은 PostList에서 model = Post 로 선언하면
     # get_context_data 에서 post_list = Post.objects.all() 을 명령함
