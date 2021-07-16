@@ -4,6 +4,7 @@ from . import views
 urlpatterns = [
     # path('', views.index),
     path('', views.PostList.as_view()),
+    path('search/<str:q>/', views.PostSearch.as_view()),
     path('category/<str:slug>/', views.category_page),
     path('tag/<str:slug>/', views.tag_page),
     # path('<int:pk>/', views.single_post_page),
