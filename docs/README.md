@@ -1,6 +1,6 @@
-# KY_django
+# Practice Blot
 
-> 게시판 Toy Project 입니다.
+> 게시판 Toy Project 입니다. (백엔드 기술스택 연습 - django, spring)
 
 ## 기술스택
 
